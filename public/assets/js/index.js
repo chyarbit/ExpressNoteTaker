@@ -49,12 +49,20 @@ var renderActiveNote = function() {
   }
 };
 
+// create function to get a random ID number
+function createID(){
+  var randomID = Math.floor(Math.random() * 100)
+  return randomID
+}
+
 // Get the note data from the inputs, save it to the db and update the view
 var handleNoteSave = function() {
   var newNote = {
     title: $noteTitle.val(),
-    text: $noteText.val()
+    text: $noteText.val(),
+    id: createID() 
   };
+  console.log(newNote);
 
   saveNote(newNote).then(function(data) {
     getAndRenderNotes();
@@ -106,29 +114,29 @@ var handleRenderSaveBtn = function() {
 // Render's the list of note titles
 var renderNoteList = function(notes) {
   $noteList.empty();
-  console.log(notes);
-  // var noteListItems = [];
+  //console.log(notes);
+  var noteListItems = [];
 
-  // for (var i = 0; i < notes.length; i++) {
-  //   var note = notes[i];
+  for (var i = 0; i < notes.length; i++) {
+    var note = notes[i];
+    //console.log(note);
+    var $li = $("<li class='list-group-item'>");
+    var $span = $("<span>").text(note.title);
+    var $delBtn = $(
+      "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
+    );
 
-  //   var $li = $("<li class='list-group-item'>").data(note);
-  //   var $span = $("<span>").text(note.title);
-  //   var $delBtn = $(
-  //     "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
-  //   );
+    $li.append($span, $delBtn);
+    noteListItems.push($li);
+  }
 
-  //   $li.append($span, $delBtn);
-  //   noteListItems.push($li);
-  // }
-
-  // $noteList.append(noteListItems);
+  $noteList.append(noteListItems);
 };
 
 // Gets notes from the db and renders them to the sidebar
 var getAndRenderNotes = function() {
   return getNotes().then(function(data) {
-    console.log(data);
+    ///console.log(data);
     renderNoteList(data);
   });
 };

@@ -6,13 +6,13 @@ var path = require("path");
 var fs = require("fs");
 // import db.json file into the server.js file to reference and use fs readFileSync to read contents of the file
 var data = fs.readFileSync("./db/db.json", "utf8");
-console.log(data);
+// console.log(data);
 // parse the json file
 var notesDB = JSON.parse(data);
-console.log(typeof(notesDB));
+// console.log(typeof(notesDB));
 // since notesDB is an object, we need to turn it into an array of objects
 var finalNotesDB = Object.keys(notesDB).map(i => notesDB[i])
-console.log(finalNotesDB);
+// console.log(finalNotesDB);
 
 
 // instantiate a new express app utilizing the express() method
@@ -38,26 +38,24 @@ app.use(express.static("public"));
     app.get("/notes", function(req, res) {
         res.sendFile(path.join(__dirname, "/public/notes.html"));
     });
-    // return a catch all to the index.html page in case a user types the wrong link
-    app.get("*", function(req, res) {
-        res.sendFile(path.join(__dirname, "/public/index.html"));
-    });
+
 
 // create the API get routes
     // set up the notes get route 
     app.get("/api/notes", function(req, res) {
         // response needs to access the notesDB variable in order to send a response
-        res.json(data);
+        res.json(finalNotesDB);
         //console.log(finalNotesDB);
     });
 
 // create the API POST routes
     // add data from the database to the json file
     app.post("/api/notes", function(req,res){
+        // still need to add a unique id here- change def of newNote on the front end and create unique ID there.
         notesDB.push(req.body);
         //notesDB.push("dinner", "pasta")
         // add the new note to the db.json file
-        fs.writeFile("./db/db.json", JSON.stringify(notesDB) + "\n", function(error){
+        fs.writeFile("./db/db.json", JSON.stringify(notesDB), function(error){
             if (error){
                 console.log("Your note did not save");
             }
@@ -66,9 +64,18 @@ app.use(express.static("public"));
           res.json(finalNotesDB);
     })
 
-
 // create the API delete routes
+    app.delete('/api/notes/delete', function (req, res) {
+        finalNotesDB.id = 
+    res.send("Your note has been deleted")
+    })
 
+// return a catch all to the index.html page in case a user types the wrong link
+// must be at the very end of the page otherwise it will wipe out all the routes since it is a catch all
+app.get("*", function(req, res) {
+    res.sendFile(path.join(__dirname, "/public/index.html"));
+    });
+    
 // start the server to listen
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
