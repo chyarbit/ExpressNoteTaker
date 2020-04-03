@@ -51,7 +51,7 @@ app.use(express.static("public"));
 // create the API POST routes
     // add data from the database to the json file
     app.post("/api/notes", function(req,res){
-        // still need to add a unique id here- change def of newNote on the front end and create unique ID there.
+        // still need to add a unique id here- change def of newNote on the front end and create unique ID there
         notesDB.push(req.body);
         //notesDB.push("dinner", "pasta")
         // add the new note to the db.json file
@@ -65,9 +65,9 @@ app.use(express.static("public"));
     })
 
 // create the API delete routes
-    app.delete('/api/notes/delete', function (req, res) {
-        finalNotesDB.id = 
-    res.send("Your note has been deleted")
+    app.delete('/api/notes/:id', function (req, res) {
+        finalNotesDB.splice(req.params.id);
+        res.json("Your note has been deleted")
     })
 
 // return a catch all to the index.html page in case a user types the wrong link

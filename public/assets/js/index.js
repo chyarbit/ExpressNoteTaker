@@ -62,7 +62,7 @@ var handleNoteSave = function() {
     text: $noteText.val(),
     id: createID() 
   };
-  console.log(newNote);
+  //console.log(newNote);
 
   saveNote(newNote).then(function(data) {
     getAndRenderNotes();
@@ -77,13 +77,14 @@ var handleNoteDelete = function(event) {
 
   var note = $(this)
     .parent(".list-group-item")
-    .data();
+    //.data();
 
   if (activeNote.id === note.id) {
     activeNote = {};
   }
+  var noteID =$(note).attr("id");
 
-  deleteNote(note.id).then(function() {
+  deleteNote(noteID).then(function() {
     getAndRenderNotes();
     renderActiveNote();
   });
@@ -121,6 +122,7 @@ var renderNoteList = function(notes) {
     var note = notes[i];
     //console.log(note);
     var $li = $("<li class='list-group-item'>");
+    $li.attr("id",i);
     var $span = $("<span>").text(note.title);
     var $delBtn = $(
       "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
