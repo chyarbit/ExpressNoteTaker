@@ -18,7 +18,7 @@ var finalNotesDB = Object.keys(notesDB).map(i => notesDB[i])
 // instantiate a new express app utilizing the express() method
 var app = express();
 // declare PORT number so local server can find the application
-var PORT = 8113;
+var PORT = process.env.PORT || 8113;
 
 // middleware will parse the request string and convert the request to a json object that will be referenced later as req.body
 app.use(express.urlencoded({ extended: true }));
